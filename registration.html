@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAGLE ONE | Register</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2 class="accent-text">NEW OPERATOR</h2>
+            </div>
+
+            <form onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <input type="text" id="reg-username" placeholder="Desired Operator ID" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="reg-password" placeholder="Passcode" required>
+                </div>
+                <button type="submit" class="btn-primary btn-full">INITIALIZE REGISTRATION</button>
+            </form>
+
+            <div id="reg-error" class="error-msg hidden" role="alert"></div>
+            
+            <div class="auth-footer">
+                <a href="index.html" class="auth-link">Abort / Return to Login</a>
+            </div>
+        </div>
+    </main>
+    <script src="auth.js"></script>
+</body>
+</html>

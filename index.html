@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAGLE ONE | Secure Uplink</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="logo">EAGLE <span class="accent-text">ONE</span></h1>
+                <p class="auth-subtitle">SECURE UPLINK REQUIRED</p>
+            </div>
+
+            <form onsubmit="handleAuth(event)">
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="OPERATOR ID" required aria-label="Username">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="PASSCODE" required aria-label="Password">
+                </div>
+                <button type="submit" class="btn-primary btn-full">INITIALIZE UPLINK</button>
+            </form>
+
+            <div id="auth-error" class="error-msg hidden" role="alert"></div>
+
+            <div class="auth-footer">
+                <a href="registration.html" class="auth-link">Request Access (Register)</a>
+            </div>
+        </div>
+    </main>
+    <script src="auth.js"></script>
+</body>
+</html>

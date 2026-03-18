@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAGLE ONE | Command Center</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<script>
+    const user = JSON.parse(localStorage.getItem('eagle_active_user'));
+    if (!user || user.role !== 'admin') window.location.replace('index.html');
+</script>
+
+<div class="admin-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            EAGLE <span class="accent-text">COMMAND</span>
+        </div>
+
+        <nav class="nav-links">
+            <a onclick="switchAdminTab(event, 'products')" class="active">📦 Inventory</a>
+            <a onclick="switchAdminTab(event, 'collections')">💎 Collections (Offers/Best)</a>
+            <a onclick="switchAdminTab(event, 'orders')">📑 Deployments (Orders)</a>
+            <a onclick="switchAdminTab(event, 'faq')">❓ Intel (FAQ)</a>
+            <a onclick="switchAdminTab(event, 'blog')">✍️ Field Reports (Blog)</a>
+            <a onclick="switchAdminTab(event, 'support')">🛠️ Tech Support</a>
+            <a onclick="switchAdminTab(event, 'users')">👥 Operators (Users)</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button onclick="logout()" class="btn-danger btn-full">SEVER UPLINK</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        
+        <section id="view-products">
+            <div class="admin-card">
+                <h2>Manage Inventory</h2>
+                <form id="admin-product-form" class="admin-form-grid" onsubmit="event.preventDefault(); saveProduct();">
+                    <input id="p-id" type="hidden">
+                    <input id="p-name" type="text" placeholder="Gear Name" required>
+                    <input id="p-price" type="number" step="0.01" placeholder="Price (₱)" required>
+                    <input id="p-stock" type="number" placeholder="Units in Stock" required>
+                    <input id="p-img" type="url" placeholder="Image URL (Optional)">
+                    <button type="submit" class="btn-primary">LOG GEAR</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Designation</th>
+                            <th>Cost</th>
+                            <th>Stock</th>
+                            <th>Directives</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="view-collections" class="hidden">
+            <div class="admin-card">
+                <h2>Manage Collections</h2>
+                <p class="text-muted">Categorize gear into special operational groups.</p>
+                <div class="admin-form-grid">
+                    <input id="col-name" type="text" placeholder="Item/Bundle Name">
+                    <select id="col-type">
+                        <option value="offers">Operational Bundle (Offer)</option>
+                        <option value="new-arrivals">New Arrival</option>
+                        <option value="best-sellers">Top Performer (Best Seller)</option>
+                    </select>
+                    <button onclick="addToCollection()" class="btn-primary">ASSIGN CATEGORY</button>
+                </div>
+            </div>
+            <div id="collections-display" class="orders-grid">
+                </div>
+        </section>
+
+        <section id="view-orders" class="hidden">
+            <h2>Deployment Logs</h2>
+            <div id="orders-list" class="orders-grid"></div>
+        </section>
+
+        <section id="view-faq" class="hidden">
+            <div class="admin-card">
+                <h2>Operational Intel (FAQ)</h2>
+                <div class="admin-form-grid" style="grid-template-columns: 1fr 2fr auto;">
+                    <input id="faq-question" type="text" placeholder="Question">
+                    <input id="faq-answer" type="text" placeholder="Official Answer">
+                    <button onclick="saveFAQ()" class="btn-primary">LOG INTEL</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="faq-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="view-blog" class="hidden">
+            <div class="admin-card">
+                <h2>Field Reports (Blog)</h2>
+                <div class="admin-form-grid" style="grid-template-columns: 1fr;">
+                    <input id="blog-title" type="text" placeholder="Report Title">
+                    <textarea id="blog-content" placeholder="Report Content Details..." rows="5" style="background:rgba(0,0,0,0.3); color:white; border:1px solid var(--border); padding:1rem; border-radius:8px;"></textarea>
+                    <button onclick="saveBlogPost()" class="btn-primary">PUBLISH REPORT</button>
+                </div>
+            </div>
+            <div id="blog-admin-list" class="orders-grid"></div>
+        </section>
+
+        <section id="view-support" class="hidden">
+            <h2>Support Frequency</h2>
+            <div class="admin-card">
+                <p>Support status: <span class="accent-text">SYSTEMS OPERATIONAL</span></p>
+                <hr style="border:0; border-top:1px solid var(--border); margin:1rem 0;">
+                <div id="support-tickets">
+                    <p class="text-muted">No pending tech support tickets from operators.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-users" class="hidden">
+            <h2>Active Operators</h2>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Operator ID</th>
+                            <th>Clearance Level</th>
+                            <th>Directives</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="system.js"></script>
+
+<script>
+    // These functions complement your system.js to handle the new tabs
+    
+    function addToCollection() {
+        const name = document.getElementById('col-name').value;
+        const type = document.getElementById('col-type').value;
+        if(!name) return alert("Enter item name");
+        
+        let collections = JSON.parse(localStorage.getItem('eagle_collections')) || { offers:[], newArrivals:[], bestSellers:[] };
+        
+        if(type === 'offers') collections.offers.push(name);
+        else if(type === 'new-arrivals') collections.newArrivals.push(name);
+        else collections.bestSellers.push(name);
+        
+        localStorage.setItem('eagle_collections', JSON.stringify(collections));
+        alert("GEAR CATEGORIZED");
+        document.getElementById('col-name').value = '';
+    }
+
+    function saveFAQ() {
+        const q = document.getElementById('faq-question').value;
+        const a = document.getElementById('faq-answer').value;
+        if(!q || !a) return alert("Fill all intel fields");
+
+        let faq = JSON.parse(localStorage.getItem('eagle_faq')) || [];
+        faq.push({ id: Date.now(), question: q, answer: a });
+        localStorage.setItem('eagle_faq', JSON.stringify(faq));
+        
+        document.getElementById('faq-question').value = '';
+        document.getElementById('faq-answer').value = '';
+        renderFAQAdmin();
+    }
+
+    function saveBlogPost() {
+        const title = document.getElementById('blog-title').value;
+        const content = document.getElementById('blog-content').value;
+        if(!title || !content) return alert("Report incomplete");
+
+        let blog = JSON.parse(localStorage.getItem('eagle_blog')) || [];
+        blog.push({ id: Date.now(), title, content, date: new Date().toLocaleDateString() });
+        localStorage.setItem('eagle_blog', JSON.stringify(blog));
+
+        alert("FIELD REPORT PUBLISHED");
+        document.getElementById('blog-title').value = '';
+        document.getElementById('blog-content').value = '';
+    }
+
+    // Initialize the Admin View properly
+    window.onload = () => {
+        if(typeof renderAdmin === 'function') renderAdmin();
+        // Add specific renderers for new sections if they exist in your system.js
+        if(typeof renderFAQAdmin === 'function') renderFAQAdmin();
+    }
+</script>
+</body>
+</html>

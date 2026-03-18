@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EAGLE ONE</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<script>
+    // Redirect if not logged in
+    if (!localStorage.getItem('eagle_active_user')) {
+        window.location.href = 'login.html';
+    }
+</script>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">EAGLE <span class="accent-text">ONE</span></div>
+    <div class="nav-actions">
+        <button class="btn-outline" onclick="toggleCart()">🛒 (<span id="cart-count">0</span>)</button>
+        <button onclick="logout()" class="btn-danger">LOGOUT</button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <h1 class="accent-text">APEX PERFORMANCE</h1>
+</header>
+
+<!-- SEARCH -->
+<div class="search-container">
+    <input id="product-search" class="search-bar" onkeyup="filterStore()" placeholder="SEARCH...">
+</div>
+
+<!-- TABS -->
+<div class="category-bar">
+    <a href="#" onclick="showTab(event, 'home')" class="active">Home</a>
+    <a href="#" onclick="showTab(event, 'about')">About</a>
+    <a href="#" onclick="showTab(event, 'products')">Products</a>
+    <a href="#" onclick="showTab(event, 'offers')">Offers</a>
+    <a href="#" onclick="showTab(event, 'new-arrivals')">New Arrivals</a>
+    <a href="#" onclick="showTab(event, 'best-sellers')">Best Sellers</a>
+    <a href="#" onclick="showTab(event, 'contact')">Contact</a>
+    <a href="#" onclick="showTab(event, 'faq')">FAQ</a>
+    <a href="#" onclick="showTab(event, 'blog')">Blog</a>
+    <a href="#" onclick="showTab(event, 'support')">Support</a>
+</div>
+
+<!-- TAB CONTENT -->
+<div id="tab-content" style="padding: 2rem 5%; max-width:1200px; margin:0 auto;">
+    <div id="home-tab" class="tab-section">Welcome to EAGLE ONE! Explore our products and gear for peak performance.</div>
+    <div id="about-tab" class="tab-section hidden">
+        <h2>About EAGLE ONE</h2>
+        <p>EAGLE ONE is a modern performance gear store offering high-quality products designed for speed, durability, and precision.</p>
+    </div>
+    <div id="products-tab" class="tab-section hidden">
+        <div id="store-grid" class="store-grid"></div>
+    </div>
+    <div id="offers-tab" class="tab-section hidden"><p>No current offers yet.</p></div>
+    <div id="new-arrivals-tab" class="tab-section hidden"><p>Check out our newest products.</p></div>
+    <div id="best-sellers-tab" class="tab-section hidden"><p>These products are flying off the shelves!</p></div>
+    <div id="contact-tab" class="tab-section hidden"><p>Contact us at support@eagleone.com</p></div>
+    <div id="faq-tab" class="tab-section hidden"><p>Frequently asked questions will appear here.</p></div>
+    <div id="blog-tab" class="tab-section hidden"><p>Read our latest articles and tips.</p></div>
+    <div id="support-tab" class="tab-section hidden"><p>Need help? Submit a support request.</p></div>
+</div>
+
+<!-- OVERLAY -->
+<div id="cart-overlay" class="cart-overlay" onclick="toggleCart()"></div>
+
+<!-- CART SIDEBAR -->
+<div id="cart-sidebar" class="cart-sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2>YOUR CART</h2>
+        <button onclick="toggleCart()" class="btn-outline">✕</button>
+    </div>
+    <div id="cart-items" class="cart-items"></div>
+    <h3>Total: <span id="cart-total">₱0</span></h3>
+    <button class="btn-primary" onclick="goCheckout()">CHECKOUT</button>
+</div>
+
+<script src="system.js"></script>
+<script>
+    function showTab(event, tab) {
+        event.preventDefault(); // prevent default link behavior
+
+        // Hide all sections
+        document.querySelectorAll(".tab-section").forEach(sec => sec.classList.add("hidden"));
+
+        // Remove active class from all tabs
+        document.querySelectorAll(".category-bar a").forEach(a => a.classList.remove("active"));
+
+        // Show selected section
+        document.getElementById(tab + "-tab").classList.remove("hidden");
+
+        // Activate clicked tab
+        event.currentTarget.classList.add("active");
+
+        // If products tab, render store
+        if(tab === "products") renderStore();
+    }
+</script>
+
+</body>
+</html>

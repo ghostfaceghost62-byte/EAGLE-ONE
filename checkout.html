@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAGLE ONE | Deployment Checkout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<script>
+    if (!localStorage.getItem('eagle_active_user')) window.location.replace('index.html');
+</script>
+
+<main class="auth-container">
+    <div class="checkout-card auth-card">
+        <h2 class="accent-text" style="text-align: center; margin-bottom: 1.5rem;">SECURE CHECKOUT</h2>
+
+        <div id="checkout-items-summary" class="checkout-summary">
+            <p>Review your cart in the main store before finalizing.</p>
+        </div>
+
+        <h3 class="checkout-total-display">Total Deployment Cost: <span id="checkout-total" class="accent-text">₱0</span></h3>
+
+        <form onsubmit="event.preventDefault(); placeOrder();" class="checkout-form">
+            <input id="chk-name" type="text" placeholder="Full Operator Name" required>
+            <input id="chk-address" type="text" placeholder="Deployment Address" required>
+            <input id="chk-contact" type="tel" placeholder="Secure Contact Number" required>
+
+            <div class="checkout-buttons">
+                <button type="button" onclick="window.location.href='index.html'" class="btn-outline">ABORT</button>
+                <button type="submit" class="btn-primary">CONFIRM DEPLOYMENT</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script src="system.js"></script>
+<script>
+    // Quick script just to display total on checkout page load
+    document.addEventListener("DOMContentLoaded", () => {
+        const c = JSON.parse(localStorage.getItem('eagle_cart')) || [];
+        const t = c.reduce((a, b) => a + (b.price * b.qty), 0);
+        document.getElementById('checkout-total').innerText = "₱" + t.toLocaleString();
+    });
+</script>
+</body>
+</html>
